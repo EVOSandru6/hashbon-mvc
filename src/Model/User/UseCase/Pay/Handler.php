@@ -42,10 +42,13 @@ class Handler
 
     private function pay(int $userId, int $cost)
     {
+
         $connection = (new DbConnection())->getConnection();
+        $connection->beginTransaction();
         $stmt = $connection->prepare("update users set balance = balance - '$cost' where id=?");
         $stmt->execute([$userId]);
         $stmt->fetch();
+        $connection->rollBack();
 
         $errorInfo = $stmt->errorInfo();
 
