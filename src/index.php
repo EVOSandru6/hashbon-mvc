@@ -16,8 +16,6 @@ use App\Provider\Request;
 error_reporting(E_ALL);
 session_start();
 
-//unset $_SESSION;
-
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $request = new Request(

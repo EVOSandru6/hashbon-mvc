@@ -16,7 +16,6 @@ class Handler
         }
 
         $this->pay($command->userId, $command->cost);
-        // exit('after');
 
         $dbUser = $this->getUser($command->userId);
 
