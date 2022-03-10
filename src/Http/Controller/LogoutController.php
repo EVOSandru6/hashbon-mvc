@@ -10,7 +10,7 @@ class LogoutController extends BaseController
 {
     #[NoReturn] public function execute(Request $request)
     {
-        unset($_SESSION['user']);
+        unset($_SESSION['auth']);
 
         (new Redirect("Logout. Good luck!"))->execute();
     }

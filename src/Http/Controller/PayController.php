@@ -2,16 +2,28 @@
 
 namespace App\Http\Controller;
 
+use App\Http\Redirect;
+use App\Model\User\UseCase\Pay\Handler as PayHandler;
+use App\Model\User\UseCase\Pay\Command as PayCommand;
 use App\Provider\Request;
 
 class PayController extends BaseController
 {
     public function execute(Request $request)
     {
-        $сost = $request->getQueryParameter('cost');
+        try {
+            $cost = $request->getFromBody('cost');
 
-        header('/');
+            $cmd = new PayCommand(
+                userId: $request->getUser()->id,
+                cost: $cost
+            );
 
-        // exit($сost);
+            (new PayHandler)->handle($cmd);
+
+            (new Redirect("Pay released!"))->execute();
+        } catch (\Exception $e) {
+            (new Redirect("Pay failed: " . $e->getMessage()))->execute();
+        }
     }
 }
