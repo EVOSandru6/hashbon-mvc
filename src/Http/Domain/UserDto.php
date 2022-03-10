@@ -7,7 +7,7 @@ class UserDto
     public function __construct(
         public int $id,
         public string $username,
-        public string $balance,
+        public int $balance,
     )
     {
     }

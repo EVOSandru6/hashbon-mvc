@@ -38,13 +38,15 @@ class Request
 
     public function getUser(): UserDto
     {
-        $user = json_decode($this->getAuth()['user'], true);
+        $user = json_decode($this->getAuth()['user']);
 
-        return new UserDto(
+        $dto = new UserDto(
             id: $user->id,
             username: $user->username,
-            balance: $user->nalance
+            balance: (int)$user->balance
         );
+
+        return $dto;
     }
 
     public function addMiddleware(MiddlewareInterface $middleware): static
