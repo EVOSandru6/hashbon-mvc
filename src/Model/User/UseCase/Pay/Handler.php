@@ -9,17 +9,21 @@ class Handler
 {
     public function handle(Command $command)
     {
+        session_write_close();
+
         $dbUser = $this->getUser($command->userId);
 
         if ($dbUser->balance < $command->cost) {
             throw new \DomainException('Please, top up balance');
         }
 
-        $this->pay($command->userId, $command->cost);
+        $this->pay($command->userId, $dbUser->balance, $command->cost);
 
         $dbUser = $this->getUser($command->userId);
 
+        session_start();
         $_SESSION['auth']['user'] = json_encode($dbUser);
+        session_write_close();
     }
 
     public function getUser(int $userId): UserDto
@@ -40,14 +44,19 @@ class Handler
         );
     }
 
-    private function pay(int $userId, int $cost)
+    private function pay(int $userId, int $balance, int $cost)
     {
+        $newVal = $balance - $cost;
+
         $connection = (new DbConnection())->getConnection();
         $connection->beginTransaction();
-        $stmt = $connection->prepare("update users set balance = balance - '$cost' where id=?");
+        $stmt = $connection->prepare("update users set balance = '$newVal' where id=?");
+
+        // var_dump($stmt->queryString);
+
         $stmt->execute([$userId]);
         $stmt->fetch();
-        $connection->rollBack();
+        $connection->commit();
 
         $errorInfo = $stmt->errorInfo();
 
