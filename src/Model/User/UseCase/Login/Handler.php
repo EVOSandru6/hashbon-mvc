@@ -13,19 +13,19 @@ class Handler
         $connection = $instance->getConnection();
 
         $stmt = $connection->prepare("SELECT id, username, balance FROM users where username=? and password=?");
-        $users = $stmt->execute([$command->username, md5($command->password)]);
+        $stmt->execute([$command->username, md5($command->password)]);
+        $rawUser = $stmt->fetch();
 
-        var_dump($users);
-        exit();
-
-        if(!$users) {
+        if(!$rawUser) {
             throw new \DomainException('user not found');
         }
 
-        return new UserDto(
-            id: $users[0]['id'],
-            username: $users[0]['username'],
-            balance: $users[0]['balance']
+        $user = new UserDto(
+            id: $rawUser['id'],
+            username: $rawUser['username'],
+            balance: $rawUser['balance']
         );
+
+        return $user;
     }
 }

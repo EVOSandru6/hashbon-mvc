@@ -9,14 +9,14 @@ sudo -u postgres psql -c 'create database hashbon_mvc_db';
 
 2) Create users Linear SQL
 ```
-sudo -u postgres psql hashbon_mvc_db -c 'CREATE TABLE public.users (id bigserial NOT NULL, username varchar(50) NOT NULL, password varchar(50) NOT NULL, balance int NOT NULL default 0);';
+sudo -u postgres psql hashbon_mvc_db -c 'CREATE TABLE public.users (id bigserial NOT NULL, username varchar(50) NOT NULL UNIQUE, password varchar(50) NOT NULL, balance int NOT NULL default 0);';
 ```
 
 2.1) Create users Full SQL ( то же самое, что 2., для наглядности )
 ```
 CREATE TABLE public.users (
 id bigserial PRIMARY KEY,
-username varchar(50) NOT NULL,
+username varchar(50) NOT NULL UNIQUE,
 password varchar(50) NOT NULL,
 balance int NOT NULL default 0
 );

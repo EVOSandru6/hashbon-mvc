@@ -4,7 +4,7 @@ namespace App\Http\Controller;
 
 use App\Provider\Request;
 
-class BalanceController extends BaseController
+class CabinetController extends BaseController
 {
     public function execute(Request $request)
     {

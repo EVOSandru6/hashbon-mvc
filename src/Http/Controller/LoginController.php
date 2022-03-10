@@ -20,7 +20,7 @@ class LoginController extends BaseController
             $user = (new LoginHandler())->handle($cmd);
 
             if($user) {
-                $_SESSION['user'] = json_encode($user);
+                $_SESSION['auth']['user'] = json_encode($user);
                 (new Redirect('Login success!'))->execute();
             }
 

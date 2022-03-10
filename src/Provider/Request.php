@@ -31,9 +31,9 @@ class Request
         return $this->headers[$key] ?? throw new \DomainException('Header not found');
     }
 
-    public function getAuth()
+    public function getAuth(): ?array
     {
-        return $this->session['auth'] ?? throw new \DomainException('Auth invalid');
+        return $this->session['auth'] ?? null;
     }
 
     public function getUser(): UserDto
@@ -55,5 +55,15 @@ class Request
         } catch (\Exception $e) {
             throw new \DomainException("Middleware failed {$e->getMessage()}");
         }
+    }
+
+    public function isPostMethod(): bool
+    {
+        return strtolower($this->headers['REQUEST_METHOD']) === 'post';
+    }
+
+    public function isGetMethod(): bool
+    {
+        return strtolower($this->headers['REQUEST_METHOD']) === 'get';
     }
 }

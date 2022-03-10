@@ -17,5 +17,13 @@ class Command
         if(strlen($password) < $minStrLen) {
             throw new \DomainException("password is shorter, than $minStrLen");
         }
+
+        $this->username = $this->clearData($this->username);
+        $this->password = $this->clearData($this->password);
+    }
+
+    public function clearData($data): string
+    {
+        return htmlspecialchars(strip_tags($data));
     }
 }
