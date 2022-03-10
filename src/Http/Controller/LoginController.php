@@ -19,12 +19,12 @@ class LoginController extends BaseController
 
             $user = (new LoginHandler())->handle($cmd);
 
-            if($user) {
+            if ($user) {
                 (new Redirect('Login success!'))->execute();
             }
 
             throw new \DomainException('Access denied.');
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             (new Redirect("error: {$e->getMessage()}"))->execute();
         }
     }

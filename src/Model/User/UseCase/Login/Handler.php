@@ -15,7 +15,7 @@ class Handler
         $stmt->execute([$command->username, md5($command->password)]);
         $rawUser = $stmt->fetch();
 
-        if(!$rawUser) {
+        if (!$rawUser) {
             throw new \DomainException('User not found');
         }
 

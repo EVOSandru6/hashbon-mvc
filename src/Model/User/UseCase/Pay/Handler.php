@@ -11,7 +11,7 @@ class Handler
     {
         $dbUser = $this->getUser($command->userId);
 
-        if($dbUser->balance < $command->cost) {
+        if ($dbUser->balance < $command->cost) {
             throw new \DomainException('Please, top up balance');
         }
 
@@ -29,7 +29,7 @@ class Handler
         $stmt->execute([$userId]);
         $rawUser = $stmt->fetch();
 
-        if(!$rawUser) {
+        if (!$rawUser) {
             throw new \DomainException('User not found');
         }
 
@@ -42,7 +42,6 @@ class Handler
 
     private function pay(int $userId, int $cost)
     {
-
         $connection = (new DbConnection())->getConnection();
         $connection->beginTransaction();
         $stmt = $connection->prepare("update users set balance = balance - '$cost' where id=?");
@@ -52,7 +51,7 @@ class Handler
 
         $errorInfo = $stmt->errorInfo();
 
-        if(!!$errorInfo[1]) {
+        if (!!$errorInfo[1]) {
             throw new \DomainException('Pay failed');
         }
     }

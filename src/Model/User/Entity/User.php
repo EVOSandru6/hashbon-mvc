@@ -6,14 +6,14 @@ class User
 {
     public function __construct(
         private string $name,
-        private int $balance
+        private int    $balance
     )
     {
     }
 
     public function getPath(): string
     {
-        return __CLASS__ .':'.__FILE__;
+        return __CLASS__ . ':' . __FILE__;
     }
 
     public function getName(): string

@@ -26,8 +26,7 @@ class DbConnection
 
     public static function getInstance()
     {
-        if (self::$instance == null)
-        {
+        if (self::$instance == null) {
             self::$instance = new DbConnection();
         }
 
@@ -39,6 +38,11 @@ class DbConnection
         return $this->connection;
     }
 
-    private function __clone () {}
-    private function __wakeup () {}
+    private function __clone()
+    {
+    }
+
+    private function __wakeup()
+    {
+    }
 }

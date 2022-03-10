@@ -3,8 +3,8 @@
 namespace App\Http\Controller;
 
 use App\Http\Redirect;
-use App\Model\User\UseCase\Pay\Handler as PayHandler;
 use App\Model\User\UseCase\Pay\Command as PayCommand;
+use App\Model\User\UseCase\Pay\Handler as PayHandler;
 use App\Provider\Request;
 
 class PayController extends BaseController

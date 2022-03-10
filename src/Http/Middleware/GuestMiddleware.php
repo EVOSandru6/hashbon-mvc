@@ -8,7 +8,7 @@ class GuestMiddleware implements MiddlewareInterface
 {
     public function handle(Request $request)
     {
-        if($request->getAuth()) {
+        if ($request->getAuth()) {
             throw new MiddlewareException('This page for guest');
         }
     }

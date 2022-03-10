@@ -10,11 +10,11 @@ class Command
     )
     {
         $minStrLen = 5;
-        if(strlen($username) < $minStrLen) {
+        if (strlen($username) < $minStrLen) {
             throw new \DomainException("username is shorter, than $minStrLen");
         }
 
-        if(strlen($password) < $minStrLen) {
+        if (strlen($password) < $minStrLen) {
             throw new \DomainException("password is shorter, than $minStrLen");
         }
 

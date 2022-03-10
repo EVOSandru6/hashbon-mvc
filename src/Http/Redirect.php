@@ -12,7 +12,8 @@ class Redirect
     {
     }
 
-    #[NoReturn] public function execute() {
+    #[NoReturn] public function execute()
+    {
         echo $this->message;
         header("refresh:2;url=/");
         exit();
