@@ -61,7 +61,7 @@ class Handler
         $errorInfo = $stmt->errorInfo();
 
         if (!!$errorInfo[1]) {
-            throw new \DomainException('Pay failed');
+            throw new \DomainException('Pay failed: ' . json_encode($errorInfo));
         }
     }
 }
