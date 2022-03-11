@@ -13,32 +13,22 @@ class PayController extends BaseController
     public function execute(Request $request)
     {
         try {
-            $cost = $request->getFromBody('cost');
-            $_csrf = $request->getFromBody('_csrf');
-
-            $this->checkCsrfValidOrFail($_csrf);
+            $this->checkCsrfValidOrFail(
+                _csrf: $request->getFromBody('_csrf')
+            );
 
             $cmd = new PayCommand(
                 userId: $request->getUser()->id,
-                cost: $cost
+                cost: $request->getFromBody('cost')
             );
 
             (new PayHandler)->handle($cmd);
 
-            (new CSRF)->refresh();
+            $this->refreshCSRF();
 
             (new Redirect("Pay released!"))->execute();
         } catch (\Exception $e) {
             (new Redirect("Pay failed: " . $e->getMessage()))->execute();
-        }
-    }
-
-    public function checkCsrfValidOrFail(string $_csrf): void
-    {
-        $sessionCsrf = (new CSRF)->invoke();
-
-        if ($sessionCsrf !== $_csrf) {
-            throw new \DomainException('CSRF invalid');
         }
     }
 }

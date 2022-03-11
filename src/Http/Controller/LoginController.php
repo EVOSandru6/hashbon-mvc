@@ -12,12 +12,18 @@ class LoginController extends BaseController
     public function execute(Request $request)
     {
         try {
+            $this->checkCsrfValidOrFail(
+                _csrf: $request->getFromBody('_csrf')
+            );
+
             $cmd = new LoginCommand(
                 username: $request->getFromBody('username'),
                 password: $request->getFromBody('password')
             );
 
             (new LoginHandler())->handle($cmd);
+
+            $this->refreshCSRF();
 
             (new Redirect('Login success!'))->execute();
         } catch (\Exception $e) {
