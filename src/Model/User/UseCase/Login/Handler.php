@@ -2,7 +2,7 @@
 
 namespace App\Model\User\UseCase\Login;
 
-use App\Http\Domain\UserDto;
+use App\Http\Domain\UserAuthDto;
 use App\Model\User\Entity\UserRepository;
 
 class Handler
@@ -11,7 +11,7 @@ class Handler
     {
         $user = (new UserRepository)->getByIdentity($command->username, $command->password);
 
-        $sessionUser = new UserDto(id: $user->getId());
+        $sessionUser = new UserAuthDto(id: $user->getId());
 
         session_start();
         $_SESSION['auth']['user'] = json_encode($sessionUser);

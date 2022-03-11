@@ -2,7 +2,7 @@
 
 namespace App\Http\Domain;
 
-class UserDto
+class UserAuthDto
 {
     public function __construct(
         public int $id

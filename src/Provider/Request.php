@@ -2,7 +2,7 @@
 
 namespace App\Provider;
 
-use App\Http\Domain\UserDto;
+use App\Http\Domain\UserAuthDto;
 use App\Http\Middleware\MiddlewareInterface;
 
 class Request
@@ -36,11 +36,11 @@ class Request
         return $this->session['auth'] ?? null;
     }
 
-    public function getUser(): UserDto
+    public function getUser(): UserAuthDto
     {
         $user = json_decode($this->getAuth()['user']);
 
-        return new UserDto(id: $user->id);
+        return new UserAuthDto(id: $user->id);
     }
 
     public function addMiddleware(MiddlewareInterface $middleware): static
