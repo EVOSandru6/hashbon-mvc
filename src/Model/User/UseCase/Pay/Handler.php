@@ -3,7 +3,8 @@
 namespace App\Model\User\UseCase\Pay;
 
 use App\Database\DbConnection;
-use App\Http\Domain\UserDto;
+use App\Model\User\Entity\User;
+use App\Model\User\Entity\UserRepository;
 
 class Handler
 {
@@ -11,37 +12,13 @@ class Handler
     {
         session_write_close();
 
-        $dbUser = $this->getUser($command->userId);
-
-        if ($dbUser->balance < $command->cost) {
-            throw new \DomainException('Please, top up balance');
-        }
-
-        $this->pay($command->userId, $dbUser->balance, $command->cost);
-
-        $dbUser = $this->getUser($command->userId);
-
-        session_start();
-        $_SESSION['auth']['user'] = json_encode($dbUser);
-        session_write_close();
-    }
-
-    public function getUser(int $userId): UserDto
-    {
-        $connection = (new DbConnection())->getConnection();
-        $stmt = $connection->prepare("SELECT id, username, balance FROM users where id=?");
-        $stmt->execute([$userId]);
-        $rawUser = $stmt->fetch();
-
-        if (!$rawUser) {
-            throw new \DomainException('User not found');
-        }
-
-        return new UserDto(
-            id: $rawUser['id'],
-            username: $rawUser['username'],
-            balance: $rawUser['balance']
-        );
+        $this->wrapIntoTransact(function () use ($command) {
+            $dbUser = $this->getUser($command->userId);
+            if ($dbUser->getBalance() < $command->cost) {
+                throw new \DomainException('Please, top up balance');
+            }
+            $this->pay($command->userId, $dbUser->getBalance(), $command->cost);
+        });
     }
 
     private function pay(int $userId, int $balance, int $cost)
@@ -49,19 +26,26 @@ class Handler
         $newVal = $balance - $cost;
 
         $connection = (new DbConnection())->getConnection();
-        $connection->beginTransaction();
         $stmt = $connection->prepare("update users set balance = '$newVal' where id=?");
-
-        // var_dump($stmt->queryString);
-
         $stmt->execute([$userId]);
         $stmt->fetch();
-        $connection->commit();
 
         $errorInfo = $stmt->errorInfo();
 
         if (!!$errorInfo[1]) {
             throw new \DomainException('Pay failed: ' . json_encode($errorInfo));
         }
+    }
+
+    public function getUser(int $id): User
+    {
+        return (new UserRepository())->getById($id);
+    }
+
+    private function wrapIntoTransact(callable $cb)
+    {
+        $connection = (new DbConnection())->getConnection();
+        $cb();
+        $connection->commit();
     }
 }

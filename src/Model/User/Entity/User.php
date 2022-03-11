@@ -5,20 +5,21 @@ namespace App\Model\User\Entity;
 class User
 {
     public function __construct(
-        private string $name,
-        private int    $balance
+        private int    $id,
+        private string $username,
+        private float  $balance
     )
     {
     }
 
-    public function getPath(): string
+    public function getId(): int
     {
-        return __CLASS__ . ':' . __FILE__;
+        return $this->id;
     }
 
-    public function getName(): string
+    public function getUsername(): string
     {
-        return $this->name;
+        return $this->username;
     }
 
     public function getBalance(): int

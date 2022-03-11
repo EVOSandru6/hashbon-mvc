@@ -12,18 +12,14 @@ class LoginController extends BaseController
     public function execute(Request $request)
     {
         try {
-            $username = $request->getFromBody('username');
-            $password = $request->getFromBody('password');
+            $cmd = new LoginCommand(
+                username: $request->getFromBody('username'),
+                password: $request->getFromBody('password')
+            );
 
-            $cmd = new LoginCommand($username, $password);
+            (new LoginHandler())->handle($cmd);
 
-            $user = (new LoginHandler())->handle($cmd);
-
-            if ($user) {
-                (new Redirect('Login success!'))->execute();
-            }
-
-            throw new \DomainException('Access denied.');
+            (new Redirect('Login success!'))->execute();
         } catch (\Exception $e) {
             (new Redirect("error: {$e->getMessage()}"))->execute();
         }

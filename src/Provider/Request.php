@@ -40,13 +40,7 @@ class Request
     {
         $user = json_decode($this->getAuth()['user']);
 
-        $dto = new UserDto(
-            id: $user->id,
-            username: $user->username,
-            balance: (int)$user->balance
-        );
-
-        return $dto;
+        return new UserDto(id: $user->id);
     }
 
     public function addMiddleware(MiddlewareInterface $middleware): static
