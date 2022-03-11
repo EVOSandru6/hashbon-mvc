@@ -39,7 +39,7 @@ try {
             (new CabinetController)->execute($request->addMiddleware(new AuthMiddleware())->addMiddleware(new GetOnlyMiddleware())) :
             (new HomeController)->execute($request->addMiddleware(new GuestMiddleware())->addMiddleware(new GetOnlyMiddleware()))
     };
-} catch (\Exception $e) {
+} catch (\Throwable $e) {
     echo 'total: ' . $e->getMessage();
 }
 
