@@ -11,10 +11,6 @@ class Handler
     {
         $user = (new UserRepository)->getByIdentity($command->username, $command->password);
 
-        if (!$user) {
-            throw new \DomainException('User not found. Access denied.');
-        }
-
         $sessionUser = new UserDto(id: $user->getId());
 
         session_start();

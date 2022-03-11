@@ -32,6 +32,10 @@ class UserRepository
         $stmt->execute([$username, md5($password)]);
         $rawUser = $stmt->fetch();
 
+        if (!$rawUser) {
+            throw new \DomainException('Access denied');
+        }
+
         return new User(
             id: $rawUser['id'],
             username: $rawUser['username'],
