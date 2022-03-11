@@ -3,21 +3,20 @@
 namespace App\Model\User\UseCase\Pay;
 
 use App\Database\DbConnection;
-use App\Model\User\Entity\User;
 use App\Model\User\Entity\UserRepository;
 
 class Handler
 {
     public function handle(Command $command)
     {
-        session_write_close();
-
         $this->wrapIntoTransact(function () use ($command) {
-            $dbUser = $this->getUser($command->userId);
-            if ($dbUser->getBalance() < $command->cost) {
+            $user = (new UserRepository())->getById($command->userId);
+
+            if ($user->getBalance() < $command->cost) {
                 throw new \DomainException('Please, top up balance');
             }
-            $this->pay($command->userId, $dbUser->getBalance(), $command->cost);
+
+            $this->pay($command->userId, $user->getBalance(), $command->cost);
         });
     }
 
@@ -37,14 +36,10 @@ class Handler
         }
     }
 
-    public function getUser(int $id): User
-    {
-        return (new UserRepository())->getById($id);
-    }
-
     private function wrapIntoTransact(callable $cb)
     {
         $connection = (new DbConnection())->getConnection();
+        $connection->beginTransaction();
         $cb();
         $connection->commit();
     }

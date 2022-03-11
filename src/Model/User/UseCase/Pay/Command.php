@@ -9,7 +9,7 @@ class Command
         public float $cost,
     )
     {
-        if($cost <= 0) {
+        if ($cost <= 0) {
             throw new \DomainException('Warning. Change your cost, please!');
         }
     }
