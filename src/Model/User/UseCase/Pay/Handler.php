@@ -12,7 +12,7 @@ class Handler
         $this->wrapIntoTransact(function () use ($command) {
             $user = (new UserRepository())->getById($command->userId);
 
-            if ($user->getBalance() < $command->cost) {
+            if (floatval($user->getBalance()) < $command->cost) {
                 throw new \DomainException('Please, top up balance');
             }
 
