@@ -40,7 +40,12 @@ class Handler
     {
         $connection = (new DbConnection())->getConnection();
         $connection->beginTransaction();
-        $cb();
-        $connection->commit();
+        try {
+            $cb();
+            $connection->commit();
+        } catch (\Exception $e) {
+            $connection->rollBack();
+            throw new \DomainException('Transaction failed: ' . $e->getMessage());
+        }
     }
 }
